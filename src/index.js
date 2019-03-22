@@ -29,7 +29,8 @@ function renderImg(imgData) {
   let comUL = grabElmt('comments')
 
   imgData.comments.forEach(function(comment) {
-    renderComment(comment.content, comUL);
+    let c = renderComment(comment.content, comUL);
+    c.setAttribute('comment-id', comment.id)
   })
 
   grabElmt('comment_form', (form) => {
@@ -44,6 +45,13 @@ function renderImg(imgData) {
 function grabElmt(elmt, callback = () => {}) {
   let e = document.getElementById(elmt);
   callback(e);
+  return e;
+}
+
+function createElmt(elmt, parent, callback = () => {}) {
+  let e = document.createElement(elmt);
+  callback(e);
+  parent.appendChild(e);
   return e;
 }
 
@@ -64,9 +72,16 @@ function addLikes(img, span) {
 }
 
 function renderComment(content, parent) {
-  let li = document.createElement('li')
-  li.innerText = content;
-  parent.appendChild(li);
+  let e = createElmt('li', parent, (li) => li.innerText = content);
+
+  let delButton = createElmt('button', e,
+    (button) => button.innerText = 'delete')
+
+  delButton.addEventListener('click', () => {
+    deleteComment(e);
+  })
+
+  return e;
 }
 
 function addComment(img, parent) {
@@ -83,5 +98,14 @@ function addComment(img, parent) {
     body: JSON.stringify(newBody)
   })
     .then(res => res.json())
-    .then()
+    .then(json => parent.lastChild.setAttribute('comment-id', json.id))
+}
+
+function deleteComment(li) {
+  let comment_id = li.attributes[0].value
+  li.remove()
+
+  fetch(commentsURL + `/${comment_id}`, {
+    method: 'DELETE'
+  })
 }
