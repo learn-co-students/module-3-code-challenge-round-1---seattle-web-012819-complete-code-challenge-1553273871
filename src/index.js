@@ -52,12 +52,22 @@ function updateThePage(json) {
     input = document.getElementById("comment_form").reset()
   })
 
+  showComments(json)
+  // let ul = document.getElementById('comments')
+  // let li = document.createElement('li')
+  // li.textContent = json.comments[0].content
+  //
+  // ul.appendChild(li)
+}
 
-  let ul = document.getElementById('comments')
-  let li = document.createElement('li')
-  li.textContent = json.comments[0].content
+function showComments(json) {
+  for (let comment of json.comments ) {
+    let ul = document.getElementById('comments')
+    let li = document.createElement('li')
+    li.textContent = comment.content
 
-  ul.appendChild(li)
+    ul.appendChild(li)
+  }
 }
 
 function likePicture(json) {
