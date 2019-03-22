@@ -13,11 +13,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const imageName = document.getElementById('name')
   const imageLikes = document.getElementById('likes')
   const imageCommentsUl = document.getElementById('comments')
+  const likeButton = document.getElementById('like_button')
 
 function fetchMyImage(){
   fetch(`${imageURL}`)
   .then(resp => resp.json())
   .then(json => {
+    likeButton.addEventListener('click', () => {
+      addLike(json)
+    })
     myImage.src = json.url
     imageName.textContent = json.name
     imageLikes.textContent = json.like_count
@@ -27,7 +31,12 @@ function fetchMyImage(){
       imageCommentsUl.appendChild(li)
     })
   })
+} // end of fetch image
 
+
+function addLike(json){
+// console.log(json)
+imageLikes.textContent = json.like_count +=1
 }
 
 fetchMyImage();
