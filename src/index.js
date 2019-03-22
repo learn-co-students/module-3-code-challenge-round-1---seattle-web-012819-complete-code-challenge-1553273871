@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       })
     })
-
   }
 
   function showComments(image) {
@@ -60,25 +59,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  let submitBtn = document.getElementById('submit-btn')
-  submitBtn.addEventListener('click', () => {
-    addComment(image)
+  let form = document.getElementById('comment_form')
+  form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    addComment()
   })
 
-  function addComment(image) {
+  function addComment() {
     let ul = document.getElementById('comments')
     let input = document.getElementById('comment_input').value
     let newComment = document.createElement('li')
     newComment.textContent = input
     ul.appendChild(newComment)
-    fetch('https://randopic.herokuapp.com/comments', {
+
+    fetch('https://randopic.herokuapp.com/comments/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         image_id: 2288,
-        comment: newComment.content
+        content: document.getElementById('comment_input').value,
       })
     })
+
   }
 
 
